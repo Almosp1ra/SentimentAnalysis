@@ -1,0 +1,174 @@
+<section id="panel-manage" class="panel hidden-panel bg-white p-6 rounded shadow-sm mt-6">
+    <h2 class="text-lg font-semibold mb-4">数据管理</h2>
+
+    <!-- 查询和导入面板 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
+        
+        <!-- 查询已有数据 -->
+        <div class="p-4 border-gray-300 rounded">
+            <h3 class="font-medium mb-3">管理已有数据（查询 / 修改 / 删除）</h3>
+
+            <div class="mt-2">
+                <label class="block text-sm text-slate-600">post_id：</label>
+                <input type="text" id="q-ids" class="mt-1 border-gray-300 rounded p-2 w-full" placeholder="输入帖子id，空格分隔">
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-sm text-slate-600">时间范围</label>
+                <div class="flex gap-2 mt-1">
+                    <input id="q-start" type="date" class="p-2 border-gray-300 rounded flex-1" />
+                    ~
+                    <input id="q-end" type="date" class="p-2 border-gray-300 rounded flex-1" />
+                </div>
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-sm text-slate-600">话题：</label>
+                <input type="text" id="q-topics" class="mt-1 border-gray-300 rounded p-2 w-full" placeholder="输入话题，空格分隔">
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-sm text-slate-600">关键词：</label>
+                <input type="text" id="q-keywords" class="mt-1 border-gray-300 rounded p-2 w-full" placeholder="输入关键词，空格分隔">
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-sm text-slate-600">数据来源：</label>
+                <select id="q-platform" class="mt-1 border-gray-300 rounded p-2">
+                    <option value="">all</option>
+                    <option value="testdata">testdata</option>
+                    <option value="weibo">weibo</option>
+                    <option value="X">X</option>
+                </select>
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-sm text-slate-600">情感分析模型：</label>
+                <select id="q-model" class="mt-1 border-gray-300 rounded p-2">
+                    <option value="">all</option>
+                    <option value="textblob">textblob</option>
+                    <option value="bert">bert</option>
+                    <option value="none">none</option>
+                </select>
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-sm text-slate-600">情感类别：</label>
+                <select id="q-type" class="mt-1 border-gray-300 rounded p-2">
+                <option value="">all</option>
+                <option value="positive">positive</option>
+                <option value="neutral">neutral</option>
+                <option value="negative">negative</option>
+                </select>
+            </div>
+
+            <div class="flex gap-2 mt-2">
+                <button id="btn-search-posts" class="px-4 py-2 clickable bg-black text-white rounded hover:bg-faint-black">查询</button>
+            </div>
+        </div>
+
+        <!-- 导入新数据 -->
+        <div class="space-y-6">
+            <div class="p-4 border-gray-300 rounded">
+
+                <!-- 从文件导入数据 -->
+                <h3 class="font-medium mb-3">导入社交媒体数据</h3>
+                <form id="form-import" class="space-y-3">
+                    <div>
+                        <label class="block text-sm text-slate-600">选择文件（CSV）：</label>
+                        <input id="import-file" type="file" accept=".csv" class="mt-1 block w-full" required />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-slate-600">数据来源：</label>
+                        <select id="import-platform" class="mt-1 block w-full border-gray-300 rounded p-2">
+                            <option value="testdata">testdata</option>
+                            <option value="weibo">weibo</option>
+                            <option value="X">X</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-slate-600">情感分析模型（可多选）：</label>
+                        <div class="mt-1 flex gap-3">
+                        <label class="inline-flex items-center gap-2">
+                            <input type="checkbox" name="model" value="textblob" class="model-checkbox" />
+                            <span class="text-sm">textblob</span>
+                        </label>
+                        <label class="inline-flex items-center gap-2">
+                            <input type="checkbox" name="model" value="bert" class="model-checkbox" />
+                            <span class="text-sm">bert</span>
+                        </label>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <button id="btn-import-submit" type="button" class="px-4 py-2 clickable bg-black text-white rounded hover:bg-faint-black">提交导入</button>
+                    </div>
+                    <div class="mt-1">
+                        <div id="import-status" class="text-sm text-slate-600"></div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 数据实时抓取 -->
+            <div class="p-4 border-gray-300 rounded">
+                <h3 class="font-medium mb-3">数据实时抓取（示意）</h3>
+                <form id="form-irealtime" class="space-y-3">
+                    <div>
+                        <input id="realtime-keyword" placeholder="关键词"  class="p-2 border-gray-300 rounded" />
+                        <select id="realtime-platform"  class="mt-1 border-gray-300 rounded p-2">
+                            <option>weibo</option>
+                            <option>X</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button id="btn-start-crawl" type="button" class="px-4 py-2 clickable bg-black text-white rounded hover:bg-faint-black">开始抓取</button>
+                        <button id="btn-stop-crawl" type="button" class="px-4 py-2 clickable bg-white border-gray-300 rounded hover:bg-faint-white">停止</button>
+                        <span id="crawl-status">状态：空闲</span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 查询结果，和数据管理面板 -->
+    <div id="q-panel" class="panel hidden hidden-panel bg-white p-6 rounded shadow-sm mt-6">
+
+        <!-- 帖子列表 -->
+        <div id="posts-list" class="p-4 border-gray-300 rounded bg-slate-50">
+            <h2 id="posts-list-title" class="text-lg font-semibold mb-4"></h2>
+            <div id="posts-results" class="max-h-128 overflow-auto border-gray-300 p-2 rounded bg-slate-50"></div>
+            <div id="pagination" class="flex justify-center items-center mt-4 space-x-4">
+                <button id="prev-page" class="px-3 py-1 clickable bg-white border-gray-300 rounded hover:bg-faint-white">上一页</button>
+                <span id="page-info" class="mx-3 text-sm text-gray-600"></span>
+                <button id="next-page" class="px-3 py-1 clickable bg-white border-gray-300 rounded hover:bg-faint-white">下一页</button>
+            </div>
+        </div>
+
+        <div class="mt-3 flex gap-2 items-center">
+            <button id="btn-select-all" class="px-3 py-1 clickable border-gray-300 rounded hover:bg-faint-white">全选</button>
+            <button id="btn-select-none" class="px-3 py-1 clickable border-gray-300 rounded hover:bg-faint-white">取消选中</button>
+            <button id="btn-delete-selected" class="px-3 py-1 clickable border-gray-300 rounded text-white bg-red-600 hover:bg-red-700">删除选中</button>
+            <button id="btn-delete-all" class="px-3 py-1 clickable border-gray-300 rounded text-white bg-red-600 hover:bg-red-700">删除所有</button>
+        </div>
+        <div class="mt-1">
+            <span id="manage-status" class="text-sm text-slate-600"></span>
+        </div>
+
+        <div class="mt-4 flex items-center gap-3">
+            <label class="text-sm text-slate-600">选择模型：</label>
+            <select id="reanalyze-model" class="border-gray-300 rounded p-2">
+                <option value="textblob">textblob</option>
+                <option value="bert">bert</option>
+            </select>
+            <button id="btn-reanalyze-selected" class="px-3 py-1 clickable bg-black text-white rounded hover:bg-faint-black">用该模型分析选中</button>
+            <button id="btn-reanalyze-all" class="px-3 py-1 clickable bg-black text-white rounded hover:bg-faint-black">用该模型分析全部</button>
+            <button id="btn-delete-sentiments-selected" class="px-3 py-1 clickable text-white rounded bg-red-600 hover:bg-red-700">删除该模型对选中的分析记录</button>
+            <button id="btn-delete-sentiments-all" class="px-3 py-1 clickable text-white rounded bg-red-600 hover:bg-red-700">删除该模型对全部的分析记录</button>
+        </div>
+        <div class="mt-1">
+            <span id="reanalyze-status" class="text-sm text-slate-600"></span>
+        </div>
+    </div>
+</section>

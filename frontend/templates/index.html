@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        <title>社交情感监测系统</title>
+        <!-- link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet" -->
+        <link href="../static/css/output.css" rel="stylesheet">
+        <style>
+            .clickable { cursor: pointer; }
+            .modal-backdrop { background: rgba(0,0,0,0.5); }
+            input[type="file"]::-webkit-file-upload-button {
+                appearance: button;
+                -webkit-appearance: button;
+                border: 1px solid rgba(0,0,0,0.2); /* 边框淡化 */
+                border-radius: 4px; /* 圆角 */
+                background-color: #edf2f1; /* 背景色 */
+                padding: 4px 8px;
+            }
+        </style>
+    </head>
+
+    <body class="bg-gray-100 min-h-screen text-slate-800">
+        <div id="app" class="max-w-6xl mx-auto">
+
+            <!-- 页头 -->
+            <header class="flex items-center justify-between py-6 px-4 bg-white shadow-sm rounded-b">
+                <div class="flex items-center gap-4">
+                    <h1 class="text-2xl font-extrabold">社交媒体活动的时空分布与情感倾向监测</h1>
+                    <span class="text-sm text-slate-500">课程项目</span>
+                </div>
+                <div id="auth-area" class="flex items-center gap-3 text-sm">
+                    <div id="not-logged" class="flex gap-2">
+                        <button id="btn-open-login" class="px-3 py-1 bg-black text-white rounded hover:bg-faint-black">登录</button>
+                        <button id="btn-open-register" class="px-3 py-1 border-gray-300 rounded hover:bg-faint-white">注册</button>
+                    </div>
+                    <div id="logged" class="hidden items-center gap-3">
+                        <span id="welcome-text" class="text-sm text-slate-700"></span>
+                        <button id="btn-open-modify-password" class="px-2 py-1 bg-black text-white rounded text-sm hover:bg-faint-black">修改密码</button>
+                        <button id="btn-logout" class="px-2 py-1 rounded border-gray-300 text-sm hover:bg-faint-white"">登出</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 导航栏 -->
+            <nav class="mt-4 bg-white shadow-sm rounded px-4 py-2 flex items-center">
+                <div id="tabs" class="flex">
+                    <div class="tab mx-3 clickable hover:bg-faint-white" data-panel="query">数据查询</div>
+                    <div id="tab-manage" class="tab mx-3 clickable hidden hover:bg-faint-white" data-panel="manage">数据管理</div>
+                    <div id="tab-users" class="tab mx-3 clickable hidden hover:bg-faint-white" data-panel="users">用户管理</div>
+                </div>
+            </nav>
+
+            <!-- 主体部分（待填充） -->
+            <main id="main" class="mt-6">
+            </main>
+
+            <!-- 页脚 -->
+            <footer class="mt-8 p-4 text-center text-sm text-slate-500">© 2025 数据库原理课程设计</footer>
+        </div>
+
+        <!-- 登录/注册浮窗（默认隐藏） -->
+        <div id="modal-root"></div>    
+
+        <div id="modal-backdrop" class="fixed inset-0 hidden items-center justify-center modal-backdrop z-40">
+
+            <div id="modal" class="bg-white rounded shadow-lg w-full max-w-md p-6 z-50">
+
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="modal-title" class="font-semibold">登录</h3>
+                    <button id="modal-close" class="text-slate-500">✕</button>
+                </div>
+
+                <!-- 动态切换内容 -->
+                <div id="modal-body">
+
+                    <!-- 登录表单 -->
+                    <div id="login-form">
+                        <label class="block text-sm">用户名</label>
+                        <input id="login-username" class="w-full p-2  border-gray-300 rounded mb-2" />
+                        <label class="block text-sm">密码</label>
+                        <input id="login-password" type="password" class="w-full p-2  border-gray-300 rounded mb-3" />
+                        <div class="flex gap-2">
+                            <button id="btn-do-login" class="px-3 py-1 bg-black text-white rounded hover:bg-faint-black">登录</button>
+                            <button id="btn-switch-register" class="px-3 py-1  border-gray-300 rounded hover:bg-faint-white">切换到注册</button>
+                        </div>
+                        <div id="login-status" class="mt-2 text-sm text-red-500"></div>
+                    </div>
+
+                    <!-- 注册表单 -->
+                    <div id="register-form" class="hidden">
+                        <label class="block text-sm">用户名</label>
+                        <input id="reg-username" class="w-full p-2  border-gray-300 rounded mb-2" />
+                        <label class="block text-sm">密码</label>
+                        <input id="reg-password" type="password" class="w-full p-2  border-gray-300 rounded mb-2" />
+                        <label class="block text-sm">确认密码</label>
+                        <input id="reg-password2" type="password" class="w-full p-2  border-gray-300 rounded mb-3" />
+                        <div class="flex gap-2">
+                            <button id="btn-do-register" class="px-3 py-1 border-gray-300 rounded hover:bg-faint-white">注册</button>
+                            <button id="btn-switch-login" class="px-3 py-1 bg-black text-white rounded hover:bg-faint-black">切换到登录</button>
+                        </div>
+                        <div id="reg-status" class="mt-2 text-sm text-red-500"></div>
+                    </div>
+
+                    <!-- 修改密码表单 -->
+                    <div id="modify-password-form" class="hidden">
+                        <label class="block text-sm">密码</label>
+                        <input id="old-password" type="password" class="w-full p-2  border-gray-300 rounded mb-2" />
+                        <label class="block text-sm">新密码</label>
+                        <input id="new-password" type="password" class="w-full p-2  border-gray-300 rounded mb-2" />
+                        <label class="block text-sm">确认密码</label>
+                        <input id="new-password2" type="password" class="w-full p-2  border-gray-300 rounded mb-3" />
+                        <div class="flex gap-2">
+                            <button id="btn-modify-password" class="px-3 py-1 bg-black text-white rounded hover:bg-faint-black">确认修改</button>
+                        </div>
+                        <div id="modify-password-status" class="mt-2 text-sm text-red-500"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        
+        <!-- js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script type="module" src="../static/js/app.js"></script>
+        <!--script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script -->
+    </body>
+</html>

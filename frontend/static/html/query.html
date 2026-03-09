@@ -1,0 +1,160 @@
+<section id="panel-query" class="panel hidden-panel bg-white p-6 rounded shadow-sm mt-6">
+    <h2 class="text-lg font-semibold mb-4">数据查询与可视化</h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
+
+        <!-- 查询已有数据 -->
+        <div class="p-4 border-gray-300 rounded">
+            <h3 class="font-medium mb-3">查询数据</h3>
+
+            <div class="mt-2">
+                <label class="block text-sm text-slate-600">时间范围</label>
+                <div class="flex gap-2 mt-1">
+                    <input id="q-start" type="date" class="p-2 border-gray-300 rounded flex-1" />
+                    ~
+                    <input id="q-end" type="date" class="p-2 border-gray-300 rounded flex-1" />
+                </div>
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-sm text-slate-600">话题：</label>
+                <input type="text" id="q-topics" class="mt-1 border-gray-300 rounded p-2 w-full" placeholder="输入话题，空格分隔">
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-sm text-slate-600">关键词：</label>
+                <input type="text" id="q-keywords" class="mt-1 border-gray-300 rounded p-2 w-full" placeholder="输入关键词，空格分隔">
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-sm text-slate-600">数据来源：</label>
+                <select id="q-platform" class="mt-1 border-gray-300 rounded p-2">
+                    <option value="">all</option>
+                    <option value="testdata">testdata</option>
+                    <option value="weibo">weibo</option>
+                    <option value="X">X</option>
+                </select>
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-sm text-slate-600">情感分析模型：</label>
+                <select id="q-model" class="mt-1 border-gray-300 rounded p-2">
+                    <option value="">all</option>
+                    <option value="textblob">textblob</option>
+                    <option value="bert">bert</option>
+                </select>
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-sm text-slate-600">情感类别：</label>
+                <select id="q-type" class="mt-1 border-gray-300 rounded p-2">
+                <option value="">all</option>
+                <option value="positive">positive</option>
+                <option value="neutral">neutral</option>
+                <option value="negative">negative</option>
+                </select>
+            </div>
+
+            <div class="flex gap-2 mt-2">
+                <button id="btn-query" class="px-4 py-2 clickable bg-black text-white rounded hover:bg-faint-black">查询</button>
+                <button id="btn-export" class="px-4 py-2 clickable border-gray-300 rounded hover:bg-faint-white">导出 CSV</button>
+                <button id="btn-clear" class="px-4 py-2 clickable border-gray-300 rounded hover:bg-faint-white">清空结果</button>
+            </div>
+        </div>
+
+        <div class="p-4 border-gray-300 rounded">
+            <h3 class="font-medium mb-2">可视化查询（基于查询条件筛选）</h3>
+
+            <div class="grid grid-cols-1 gap-3">
+                <button id="btn-show-sentiment" class="px-3 py-2 clickable bg-green-600 text-white rounded">
+                    <p>情感分布（饼状图）</p>
+                    <p class="text-sm">注：查询条件 “情感类型” 对该项无效</p>
+                </button>
+
+                <button id="btn-show-time-trend" class="px-3 py-2 clickable bg-sky-600 text-white rounded">
+                    情感随时间变化趋势（折线图）
+                </button>
+
+                <div class="flex">
+                    <button id="btn-show-topics" class="w-full px-3 py-2 clickable bg-yellow-600 text-white rounded">
+                        <p>话题热度（柱状图 + 词云）</p>
+                    </button>
+                    <div class="gap-2 mx-3">
+                        <label class="block text-sm text-slate-600">话题词数量</label>
+                        <input id="wc-max-topics" type="number" value="20" min="10" class="p-2 border-gray-300 rounded w-full" />
+                    </div>
+                </div>
+
+                <div class="flex">
+                    <button id="btn-show-keywords" class="w-full px-3 py-2 clickable bg-yellow-600 text-white rounded">
+                        <p>关键词热度（柱状图 + 词云）</p>
+                    </button>
+                    <div class="gap-2 mx-3">
+                        <label class="block text-sm text-slate-600">关键词数量</label>
+                        <input id="wc-max-keywords" type="number" value="20" min="10" class="p-2 border-gray-300 rounded w-full" />
+                    </div>
+                </div>
+
+                <button id="btn-show-heatmap" class="px-3 py-2 clickable bg-rose-600 text-white rounded">
+                    <p>地点热力图（地图）</p>
+                </button>
+
+                <p id="visualize-status" class="px-3 py-2 text-sm text-slate-600"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 查询结果帖子列表 -->
+    <div id="q-panel" class="panel hidden-panel bg-white p-6 rounded shadow-sm mt-6">
+
+        <!-- 帖子列表 -->
+        <div id="posts-list" class="mb-4 p-4 hidden border-gray-300 rounded bg-slate-50">
+            <h2 id="posts-list-title" class="text-lg font-semibold mb-4"></h2>
+            <div id="posts-results" class="max-h-128 overflow-auto border-gray-300 p-2 rounded bg-slate-50"></div>
+            <div id="pagination" class="flex justify-center items-center mt-4 space-x-4">
+                <button id="prev-page" class="px-3 py-1 clickable bg-white border-gray-300 rounded hover:bg-faint-white">上一页</button>
+                <span id="page-info" class="mx-3 text-sm text-gray-600"></span>
+                <button id="next-page" class="px-3 py-1 clickable bg-white border-gray-300 rounded hover:bg-faint-white">下一页</button>
+            </div>
+        </div>
+
+        <!-- 可视化区域 -->
+        <div id="visualize-canvases" class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div id="sentiment-chart-card" class="p-4 border-gray-300 rounded bg-white hidden">
+                <h4 class="font-medium mb-2">情感分布</h4>
+                <canvas id="sentiment-chart" class="w-full max-h-96"></canvas>
+            </div>
+
+            <div id="time-trend-card" class="mb-4 p-4 border-gray-300 rounded bg-white hidden">
+                <h4 class="font-medium mb-2">情感随时间变化</h4>
+                <canvas id="time-trend-chart" class="w-full max-h-96"></canvas>
+            </div>
+
+            <div id="topics-card" class="mb-4 p-4 border-gray-300 rounded bg-white hidden">
+                <h4 class="font-medium mb-2">话题热度</h4>
+                <div  class="grid grid-cols-1 gap-2 mt-1">
+                    <canvas id="topics-chart" class="w-full max-h-96"></canvas>
+                    <img id="topic-wordcloud-img" src="" alt="wordcloud" class="border-gray-300 rounded hidden"/>
+                </div>
+            </div>
+
+            <div id="keywords-card" class="mb-4 p-4 border-gray-300 rounded bg-white hidden">
+                <h4 class="font-medium mb-2">关键词热度</h4>
+                <div  class="grid grid-cols-1 gap-2 mt-1">
+                    <canvas id="keywords-chart" class="w-full max-h-96"></canvas>
+                    <img id="keyword-wordcloud-img" src="" alt="wordcloud" class="border-gray-300 rounded hidden"/>
+                </div>
+            </div>
+
+            <div id="heatmap-card" class="mb-4 p-4 border-gray-300 rounded bg-white hidden md:col-span-2">
+                <h4 class="font-medium mb-2">地点热力图</h4>
+                <div id="map-frame-wrapper" class="w-full h-96 border-gray-300 rounded overflow-hidden">
+                    <iframe id="map-iframe" src="" class="w-full h-full" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 插入 Chart.js CDN（调用时会自动） -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</section>

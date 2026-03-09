@@ -1,0 +1,58 @@
+<section id="panel-users" class="panel hidden-panel bg-white p-6 rounded shadow-sm mt-6">
+    <h2 class="text-lg font-semibold mb-4">用户管理（管理员）</h2>
+
+    <!-- 查询 -->
+    <div class="gap-3 mb-4">
+        <h3 class="font-medium mb-3">管理系统用户</h3>
+
+        <div class="mt-2">
+            <label class="block text-sm text-slate-600">用户名：</label>
+            <input type="text" id="username-search" class="mt-1 border-gray-300 rounded p-2 w-full" placeholder="输入用户名，空格分隔">
+        </div>
+
+        <div class="flex gap-2 mt-2">
+            <button id="btn-search-users" class="px-4 py-2 clickable bg-black text-white rounded hover:bg-faint-black"">搜索</button>
+        </div>
+    </div>
+
+
+    <!-- 查询结果，和数据管理面板 -->
+    <div id="users-panel" class="panel hidden hidden-panel bg-white p-6 rounded shadow-sm mt-6">
+
+        <!-- 列表 -->
+        <div id="users-list" class="p-4 border-gray-300 rounded bg-slate-50 mb-4">
+            <h3 class="font-medium mb-3">用户列表</h3>
+            <div id="users-results" class="max-h-128 overflow-auto"></div>
+        </div>
+
+        <!-- 第一行操作按钮 -->
+        <div class="mt-3 flex gap-2 items-center">
+            <button id="btn-select-all" class="px-3 py-1 clickable border-gray-300 rounded hover:bg-slate-100">全选</button>
+            <button id="btn-select-none" class="px-3 py-1 clickable border-gray-300 rounded hover:bg-slate-100">取消选中</button>
+
+            <button id="btn-delete-selected" class="px-3 py-1 clickable bg-red-600 text-white rounded hover:bg-red-700">删除选中</button>
+            <button id="btn-activate-selected" class="px-3 py-1 clickable bg-green-600 text-white rounded hover:bg-green-700">激活选中</button>
+            <button id="btn-freeze-selected" class="px-3 py-1 clickable bg-yellow-500 text-white rounded hover:bg-yellow-600">冻结选中</button>
+            <button id="btn-resetpass-selected" class="px-3 py-1 clickable border-gray-300 rounded hover:bg-faint-white">重置密码（12345678）</button>
+
+            <span id="users-action-status" class="ml-4 text-sm text-slate-600"></span>
+        </div>
+
+        <!-- 第二行：角色分配/移除 -->
+        <div class="mt-3 flex items-center gap-3">
+            <label class="text-sm text-slate-600">选择角色：</label>
+            <select id="role-select" class="border-gray-300 rounded p-2">
+                <option value="analyst">analyst</option>
+                <option value="ingest">ingest</option>
+            </select>
+            <button id="btn-add-role" class="px-3 py-1 clickable bg-indigo-600 text-white rounded">赋予选中用户该角色</button>
+            <button id="btn-remove-role" class="px-3 py-1 clickable bg-red-600 text-white rounded hover:bg-red-700">从选中用户中移除该角色</button>
+            <span id="role-action-status" class="ml-4 text-sm text-slate-600"></span>
+        </div>
+
+        <div class="mt-6 text-xs text-slate-400">
+            提示：任何包含 <code>admin</code> 角色的用户不会被删除或冻结（前端会自动跳过并提示）。
+        </div>
+
+    </div>
+</section>
